@@ -46,7 +46,17 @@ def parse_input(input):
                     'preferences': data['prefs'].split('>')
                 }
         except ValueError:
-            sys.exit("malformed input line: ", line)
+            sys.exit("Error: malformed input line: ", line)
+
+    neighborhood_set = set(neighborhoods.keys())
+    owners_neighborhood_set = set(())
+    for entry in owners:
+        owners_neighborhood_set.update(owners[entry]['preferences'])
+
+    differences = owners_neighborhood_set.symmetric_difference(neighborhood_set)
+
+    if len(differences) > 0:
+        sys.exit("Error: found neighborhood preferences for non-present neighborhoods")
 
     return [neighborhoods, owners]
 
@@ -64,6 +74,7 @@ def assign_owners(neighborhoods, owners):
         assignment_fits[owner] = [calc_fit_tuple(owners[owner]['ratings'], neighborhoods[n]['ratings'], n) for n in owners[owner]['preferences']]
 
     while len(assignment_fits) > 0:
+        # TODO: Make sure that we don't get stuck in an infinite loop
         next_owner = max(assignment_fits, key=lambda n: assignment_fits[n][0][1])
 
         for choice in assignment_fits[next_owner]:
