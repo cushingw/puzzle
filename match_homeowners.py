@@ -137,33 +137,39 @@ def assign_owners(neighborhoods, owners):
         assignment_fits.pop(next_owner)
 
 
-cmd_description = """
-Match homeowners with neighborhoods based on preferences
+def main():
 
-The input data should contain information on both homeowners and neighborhoods with one record per line
+    cmd_description = """
+    Match homeowners with neighborhoods based on preferences
 
-The data format should be as follows:
+    The input data should contain information on both homeowners and neighborhoods with one record per line
 
-for a Neighborhood
-N N0 E:7 W:7 R:10
+    The data format should be as follows:
 
-for a Homeowner
-H H0 E:3 W:9 R:2 N2>N0>N1
+    for a Neighborhood
+    N N0 E:7 W:7 R:10
 
-The assignments of Homeowner to Neighborhood will be output as follows
-N0: H5(161) H11(154) H2(128) H4(122)
-"""
+    for a Homeowner
+    H H0 E:3 W:9 R:2 N2>N0>N1
 
-p = argparse.ArgumentParser(description=cmd_description, formatter_class=argparse.RawTextHelpFormatter)
-p.add_argument('input', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
-               help='Input file (default: standard input)')
-p.add_argument('output', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
-               help='Output file (default: standard output)')
+    The assignments of Homeowner to Neighborhood will be output as follows
+    N0: H5(161) H11(154) H2(128) H4(122)
+    """
 
-args = p.parse_args()
+    p = argparse.ArgumentParser(description=cmd_description, formatter_class=argparse.RawTextHelpFormatter)
+    p.add_argument('input', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
+                   help='Input file (default: standard input)')
+    p.add_argument('output', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
+                   help='Output file (default: standard output)')
 
-neighborhoods, owners = parse_input(args.input)
-assign_owners(neighborhoods, owners)
-for n in neighborhoods:
-    owner_list = ' '.join([f"{own[0]}({own[1]})" for own in neighborhoods[n]['owners']])
-    print(f"{n}: {owner_list}", file=args.output)
+    args = p.parse_args()
+
+    neighborhoods, owners = parse_input(args.input)
+    assign_owners(neighborhoods, owners)
+    for n in neighborhoods:
+        owner_list = ' '.join([f"{own[0]}({own[1]})" for own in neighborhoods[n]['owners']])
+        print(f"{n}: {owner_list}", file=args.output)
+
+
+if __name__ == '__main__':
+    main()
