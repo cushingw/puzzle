@@ -74,7 +74,6 @@ def assign_owners(neighborhoods, owners):
         assignment_fits[owner] = [calc_fit_tuple(owners[owner]['ratings'], neighborhoods[n]['ratings'], n) for n in owners[owner]['preferences']]
 
     while len(assignment_fits) > 0:
-        # TODO: Make sure that we don't get stuck in an infinite loop
         next_owner = max(assignment_fits, key=lambda n: assignment_fits[n][0][1])
 
         for choice in assignment_fits[next_owner]:
